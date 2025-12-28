@@ -1,24 +1,17 @@
 package com.bmrwork.test1.roomDB.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-import com.bmrwork.test1.roomDB.db.StudentEntity
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StudentDao {
 
-    @Insert
-    suspend fun insertStudent(student: StudentEntity)
-
-    @Update
-    suspend fun updateStudent(student: StudentEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(student: StudentEntity)
 
     @Delete
-    suspend fun deleteStudent(student: StudentEntity)
+    suspend fun delete(student: StudentEntity)
 
-    @Query("SELECT * FROM student_table ORDER BY id DESC")
-    suspend fun getAllStudents(): List<StudentEntity>
+    @Query("SELECT * FROM students ORDER BY id DESC")
+    fun getAllStudents(): Flow<List<StudentEntity>>
 }

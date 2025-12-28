@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -19,8 +20,7 @@ android {
 
     buildFeatures {
         viewBinding = true
-        // ❌ REMOVE dataBinding unless you REALLY need it
-        // dataBinding = true
+         dataBinding = true
     }
 
     buildTypes {
@@ -39,9 +39,10 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        //jvmTarget = "11"
     }
 }
+val roomVersion = "2.8.4"
 
 dependencies {
 
@@ -67,8 +68,14 @@ dependencies {
 
     // OkHttp logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation(libs.androidx.room.common.jvm)
-    implementation(libs.androidx.room.ktx)
+    implementation("androidx.room:room-runtime:$roomVersion")
+
+    // Kotlin Extensions & Coroutines support (optional but recommended)
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    // For annotation processing code generation
+    kapt("androidx.room:room-compiler:$roomVersion")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

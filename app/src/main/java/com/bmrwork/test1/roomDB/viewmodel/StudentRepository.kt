@@ -1,19 +1,17 @@
-package com.bmrwork.test1.roomDB.viewmodel
+package com.bmrwork.test1.roomDB.repository
 
 import com.bmrwork.test1.roomDB.db.StudentDao
 import com.bmrwork.test1.roomDB.db.StudentEntity
 
 class StudentRepository(private val dao: StudentDao) {
 
-    suspend fun insert(student: StudentEntity) =
-        dao.insertStudent(student)
+    val students = dao.getAllStudents()
 
-    suspend fun update(student: StudentEntity) =
-        dao.updateStudent(student)
+    suspend fun insert(student: StudentEntity) {
+        dao.insert(student)
+    }
 
-    suspend fun delete(student: StudentEntity) =
-        dao.deleteStudent(student)
-
-    suspend fun getAllStudents(): List<StudentEntity> =
-        dao.getAllStudents()
+    suspend fun delete(student: StudentEntity) {
+        dao.delete(student)
+    }
 }

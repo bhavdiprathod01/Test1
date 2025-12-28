@@ -2,38 +2,28 @@ package com.bmrwork.test1.roomDB.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bmrwork.test1.databinding.ItemStudentBinding
 import com.bmrwork.test1.roomDB.db.StudentEntity
 
 class StudentAdapter(
     private val onDelete: (StudentEntity) -> Unit
-) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
+) : ListAdapter<StudentEntity, StudentAdapter.StudentViewHolder>(DiffCallback()) {
 
-    private val list = mutableListOf<StudentEntity>()
+    class StudentViewHolder(val binding: ItemStudentBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    fun submitList(data: List<StudentEntity>) {
-        list.clear()
-        list.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    inner class ViewHolder(
-        val binding: ItemStudentBinding
-    ) : RecyclerView.ViewHolder(binding.root)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
         val binding = ItemStudentBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
-        return ViewHolder(binding)
+        return StudentViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val student = list[position]
-
+    override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
+        val student = getItem(position)
         holder.binding.tvName.text = student.name
         holder.binding.tvEmail.text = student.email
         holder.binding.tvCourse.text = student.course
@@ -43,5 +33,11 @@ class StudentAdapter(
         }
     }
 
-    override fun getItemCount() = list.size
+    class DiffCallback : DiffUtil.ItemCallback<StudentEntity>() {
+        override fun areItemsTheSame(old: StudentEntity, new: StudentEntity) =
+            old.id == new.id
+
+        override fun areContentsTheSame(old: StudentEntity, new: StudentEntity) =
+            old == new
+    }
 }
